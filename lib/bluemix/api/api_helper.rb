@@ -11,10 +11,10 @@ module Bluemix::BM
       end
 
       def protected!
-        unless authorized?
-          response['WWW-Authenticate'] = 'Basic realm="Bluemix Provision Server"'
-          throw(:halt, [401, "Not authorized\n"])
-        end
+        # unless authorized?
+        #   response['WWW-Authenticate'] = 'Basic realm="Bluemix Provision Server"'
+        #   throw(:halt, [401, "Not authorized\n"])
+        # end
       end
 
       def authorized?
