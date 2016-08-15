@@ -11,11 +11,11 @@ This is a brief introduction of Baremetal Provision Server API.
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080/login/{username}/{password}
+curl -X GET "http://10.12.20.17:8080/login/{username}/{password}
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 #Check bmp server status
 `GET`    /info
@@ -25,17 +25,20 @@ Status
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080/info
+curl -X GET "http://10.12.20.17:8080/info
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
 {
-    "name" : "fake-name",
-    "version" : "fake-version"
+    "status": 200,
+    "data": {
+        "name": "Bluemix Provision Server",
+        "version": "0.1"
+    }
 }
 ```
 
@@ -47,19 +50,20 @@ Body
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080/stemcells
+curl -X GET "http://10.12.20.17:8080/stemcells
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
 {
-  [
-    "fake-stemcell-0",
-    "fake-stemcell-1"
-  ]
+    "status": 200,
+    "data": [
+        "bosh-stemcell-0.1-softlayer-baremetal",
+        "bosh-stemcell-0.3-softlayer-baremetal"
+    ]
 }
 ```
 
@@ -71,25 +75,132 @@ Body
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080/sl/packages
+curl -X GET "http://10.12.20.17:8080/sl/packages
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
 {
-    "packages":[
-      {
-        "id": 0,
-        "name": "name0"
-      },
-      {
-        "id": 1,
-        "name": "name1"
-      }
-    ]
+    "status": 200,
+    "data": {
+        "packages": [
+            {
+                "id": 56,
+                "name": "Quad Processor Multi Core Nehalem EX"
+            },
+            {
+                "id": 126,
+                "name": "Single Xeon 1200 Series (Sandy Bridge / Haswell)"
+            },
+            {
+                "id": 142,
+                "name": "Single Xeon 2000 Series (Sandy Bridge)"
+            },
+            {
+                "id": 143,
+                "name": "Dual Xeon 2000 Series (Sandy Bridge)"
+            },
+            {
+                "id": 144,
+                "name": "Specialty Server: GPU"
+            },
+            {
+                "id": 146,
+                "name": "Sandy Bridge 1270"
+            },
+            {
+                "id": 147,
+                "name": "Specialty Server: 4u Mass Storage Dual Xeon 2000 (Sandy Bridge) Series"
+            },
+            {
+                "id": 148,
+                "name": "Specialty Server: 2u Mass Storage Dual Xeon 2000 (Sandy Bridge) Series"
+            },
+            {
+                "id": 158,
+                "name": "Quad Xeon 4000 Series (Sandy Bridge)"
+            },
+            {
+                "id": 234,
+                "name": "Quad Xeon E7-4800 v2 (Ivy Bridge) Series"
+            },
+            {
+                "id": 248,
+                "name": "Dual E5-2600 v3 Series (36 Drives)"
+            },
+            {
+                "id": 251,
+                "name": "Dual E5-2600 v3 Series (12 Drives)"
+            },
+            {
+                "id": 253,
+                "name": "Dual E5-2600 v3 Series (4 Drives)"
+            },
+            {
+                "id": 255,
+                "name": "Single E3-1270 (4 Drives)"
+            },
+            {
+                "id": 257,
+                "name": "Single E3-1270 v3 (4 Drives)"
+            },
+            {
+                "id": 259,
+                "name": "Single E5-2600 Series (4 Drives)"
+            },
+            {
+                "id": 261,
+                "name": "Single E3-1270 (2 Drives)"
+            },
+            {
+                "id": 263,
+                "name": "Dual E5-2600 Series (36 Drives)"
+            },
+            {
+                "id": 265,
+                "name": "Dual E5-2600 Series (12 Drives)"
+            },
+            {
+                "id": 267,
+                "name": "Quad E5-4600 Series (24 Drives)"
+            },
+            {
+                "id": 269,
+                "name": "Quad E7-4800  Series (6 Drives)"
+            },
+            {
+                "id": 271,
+                "name": "Quad E7-4800 v2 Series (24 Drives)"
+            },
+            {
+                "id": 273,
+                "name": "Dual E5-2600 (4 Drives)"
+            },
+            {
+                "id": 295,
+                "name": "SAP HANA Certified Servers"
+            },
+            {
+                "id": 297,
+                "name": "SAP NetWeaver Certified Servers"
+            },
+            {
+                "id": 551,
+                "name": "Dual E5-2600 v4 Series (4 Drives)"
+            },
+            {
+                "id": 553,
+                "name": "Dual E5-2600 v4 Series (12 Drives)"
+            },
+            {
+                "id": 555,
+                "name": "Dual E5-2600 v4 Series (36 Drives)"
+            }
+        ]
+    }
 }
 ```
 
@@ -101,47 +212,86 @@ Body
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080//sl/package/{packageID}/options
+curl -X GET "http://10.12.20.17:8080//sl/package/{packageID}/options
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
- {
-    "categories": [
-      {
-        "code": "code0",
-        "name": "name0",
-        "options": [
-          {
-            "id": 0,
-            "description": "description0"
-          },
-          {
-            "id": 1,
-            "description": "description1"
-          }
+{
+    "status": 200,
+    "data": {
+        "categories": [
+            {
+                "code": "server",
+                "name": "Server",
+                "options": [
+                    {
+                        "id": 29366,
+                        "description": "Quad Intel Xeon E7-4850 (40 Cores, 2.00 GHz)"
+                    },
+                    {
+                        "id": 100099,
+                        "description": "Quad Intel Xeon E7-4850 (40 Cores, 2.00 GHz)"
+                    },
+                    {
+                        "id": 100101,
+                        "description": "Quad Intel Xeon E7-4850 (40 Cores, 2.00 GHz)"
+                    }
+                ],
+                "required": true
+            },
+            {
+                "code": "os",
+                "name": "Operating System",
+                "options": [
+                    {
+                        "id": 44992,
+                        "description": "CentOS 7.x (64 bit)"
+                    },
+                    {
+                        "id": 22609,
+                        "description": "CentOS 5.x (64 bit)"
+                    },
+                    {
+                        "id": 30396,
+                        "description": "CentOS 5.x (32 bit)"
+                    },
+                    {
+                        "id": 170169,
+                        "description": "CentOS 7.0 (64 bit)"
+                    }
+                ],
+                "required": true
+            },
+            {
+                "code": "port_speed",
+                "name": "Uplink Port Speeds",
+                "options": [
+                    {
+                        "id": 22829,
+                        "description": "10 Mbps Public & Private Network Uplinks"
+                    },
+                    {
+                        "id": 26737,
+                        "description": "100 Mbps Public & Private Network Uplinks"
+                    }
+                ],
+                "required": true
+            }
         ],
-        "required": true
-      },
-      {
-        "code": "code1",
-        "name": "name1",
-        "options": [
-          {
-             "id": 0,
-            "description": "description0"
-          }
-        ],
-        "required": false
-      }
-    ],
-    "datacenters" : [
-      "datacenter0 - location0",
-      "datacenter1 - location1"
-    ]
+        "datacenters": [
+            "hkg02 - Hong Kong 2",
+            "lon02 - London 2",
+            "mon01 - Montreal 1",
+            "ams03 - Amsterdam 3",
+            "wdc04 - Washington 4",
+            "sao01 - Sao Paulo 1",
+            "sjc03 - San Jose 3"
+        ]
+    }
 }
 ```
 
@@ -153,44 +303,63 @@ Body
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080/bms/{deployment_name}
+curl -X GET "http://10.12.20.17:8080/bms/bps
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
 {
-  [
-    {
-      "id":   0,
-      "hostname": "hostname0",
-      "private_ip_address": "private_ip_address0",
-      "public_ip_address": "public_ip_address0",
-      "tags": [
-        "bm.state.new",
-        "bm.bps"
-      ],
-      "memory": 0,
-      "cpu": 0,
-      "provision_date": "2016-01-01T00:00:00-00:00"
-    },
-    {
-      "id":   1,
-      "hostname": "hostname1",
-      "private_ip_address": "private_ip_address1",
-      "public_ip_address": "public_ip_address1",
-      "tags": [
-        "bm.state.new",
-        "bm.bps"
-      ],
-      "memory": 1,
-      "cpu": 1,
-      "provision_date": "2016-01-01T00:00:00-00:00"
-
-    }
-  ]
+    "status": 200,
+    "data": [
+        {
+            "id": 981961,
+            "hostname": "baremetal-165-20160705-073112-025",
+            "private_ip_address": "10.113.109.99",
+            "public_ip_address": "169.50.68.83",
+            "tags": [
+                "bm.state.loading",
+                "bm.bps",
+                "bm.p.bm-pipeline"
+            ],
+            "hardware_status": "ACTIVE",
+            "memory": 8,
+            "cpu": 4,
+            "provision_date": "2016-07-05T19:38:08+08:00"
+        },
+        {
+            "id": 290736,
+            "hostname": "baremetal-165-20160805-103440-936",
+            "private_ip_address": "10.113.205.88",
+            "public_ip_address": "159.122.228.174",
+            "tags": [
+                "bm.p.bm-pipeline",
+                "bm.state.deleted",
+                "bm.bps"
+            ],
+            "hardware_status": "ACTIVE",
+            "memory": 8,
+            "cpu": 4,
+            "provision_date": "2016-08-05T19:57:02+08:00"
+        },
+        {
+            "id": 780185,
+            "hostname": "baremetal-165-20160805-103447-792",
+            "private_ip_address": "10.113.109.202",
+            "public_ip_address": "159.8.154.243",
+            "tags": [
+                "bm.p.bm-pipeline",
+                "bm.state.using",
+                "bm.bps"
+            ],
+            "hardware_status": "ACTIVE",
+            "memory": 8,
+            "cpu": 4,
+            "provision_date": "2016-08-05T21:24:35+08:00"
+        }
+    ]
 }
 ```
 
@@ -202,31 +371,45 @@ Body
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080/tasks?latest={number}
+curl -X GET "http://10.12.20.17:8080/tasks?latest=4
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
 {
-  [
-    {
-      "id": 0,
-      "description": "fake-description-0",
-      "start_time": "fake-start-time-0",
-      "status": "fake-status-0",
-      "end_time": "fake-end-time-0"
-    },
-    {
-      "id": 1,
-      "description": "fake-description-1",
-      "start_time": "fake-start-time-1",
-      "status": "fake-status-1",
-      "end_time": "fake-end-time-1"
-    }
-  ]
+    "status": 200,
+    "data": [
+        {
+            "id": 22,
+            "description": "load stemcell",
+            "start_time": "2016-07-14 09:28:24 +0000",
+            "status": "running"
+        },
+        {
+            "id": 21,
+            "description": "load stemcell",
+            "start_time": "2016-07-14 09:19:32 +0000",
+            "status": "failed",
+            "end_time": "2016-07-14 09:57:50 +0000"
+        },
+        {
+            "id": 20,
+            "description": "load stemcell",
+            "start_time": "2016-07-14 08:52:55 +0000",
+            "status": "completed",
+            "end_time": "2016-07-14 08:59:53 +0000"
+        },
+        {
+            "id": 19,
+            "description": "load stemcell",
+            "start_time": "2016-07-14 08:10:26 +0000",
+            "status": "failed",
+            "end_time": "2016-07-14 08:48:46 +0000"
+        }
+    ]
 }
 ```
 
@@ -238,19 +421,20 @@ Body
 
 **cURL**
 ```
-curl -X GET "http://{serverIP}:8080/task/{task_id}/txt/event
+curl -X GET "http://10.12.20.17:8080/task/19/txt/event
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
 {
-  [
-    "INFO -- event0",
-    "ERROR -- event1"
-  ]
+    "status": 200,
+    "data": [
+        "INFO -- Begin to load stemcell bosh-stemcell-3262-softlayer-baremetal into bare metal baremetal-165-20160712-110628-713\n",
+        "INFO -- Failed to load stemcell bosh-stemcell-3262-softlayer-baremetal into bare metal baremetal-165-20160712-110628-713\n"
+    ]
 }
 ```
 
@@ -262,11 +446,11 @@ Body
 
 **cURL**
 ```
-curl -X PUT "http://{serverIP}:8080/baremetal/{server_id}/{state}
+curl -X PUT "http://10.12.20.17:8080/baremetal/981961/bm.state.new
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 #Create baremetal servers
 `PUT`  /baremetals
@@ -279,9 +463,9 @@ Status
 {
     "baremetal_specs": [
         {
-            "bosh_ip": "{bosh_ip}",
-            "datacenter": "{datacenter}",
-            "domain": "{domain}",
+            "bosh_ip": "10.11.20.119",
+            "datacenter": "lon02",
+            "domain": "softlayer.com",
             "name_prefix": "baremetal-",
             "server_spec": {
                 "cores": 4,
@@ -292,8 +476,8 @@ Status
                 "hourly": true
             },
             "baremetal": true,
-            "bm_stemcell": "{bm_stemcell}",
-            "bm_netboot_image": "{bm_netboot_image}",
+            "bm_stemcell": "bosh-stemcell-0.3-softlayer-baremetal",
+            "bm_netboot_image": "bmp-netboot-ixgbe-lon02",
             "size": 1
         }
     ],
@@ -303,15 +487,18 @@ Status
 
 **cURL**
 ```
-curl -X PUT "http://{serverIP}:8080/baremetals
+curl -X PUT "http://10.12.20.17:8080/baremetals
 ```
 **Response**
 Status
-`200 OK`
+`200`
 
 Body
 ```
 {
-    "task_id": 1
+    "status": 200,
+    "data": {
+        "task_id": 23
+    }
 }
 ```
