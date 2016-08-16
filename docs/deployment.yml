@@ -1,0 +1,20 @@
+---
+name: bps
+resource_pools:
+- name: coreNode-bm
+  size: 2
+  cloud_properties:
+    bosh_ip: {replace-me}
+    datacenter: {replace-me}
+    domain: {replace-me}
+    name_prefix: {replace-me}
+    server_spec:
+      cores: 4
+      memory: 4
+      max_port_speed: 100
+      public_vlan_id: 524956
+      private_vlan_id: 524954
+      hourly: true
+    baremetal: true
+    bm_stemcell: {replace-me}
+    bm_netboot_image: {replace-me}
