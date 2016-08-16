@@ -68,6 +68,6 @@ After deployment completes, you can check the baremetal status as below. Normall
 
 [1]: https://github.com/cloudfoundry-community/bosh-softlayer-baremetal-server-release
 [2]: https://github.com/cloudfoundry-community/bosh-softlayer-baremetal-server-release/docs/baremetal-provision-server.yml
-[3]: https://github.com/cloudfoundry-community/bosh-softlayer-baremetal-server/docs/api.md
+[3]: https://github.com/cloudfoundry-community/bosh-softlayer-baremetal-server/blob/master/docs/api.md
 [4]: https://github.com/cloudfoundry-community/bosh-softlayer-tools
-[5]: https://github.com/cloudfoundry-community/bosh-softlayer-baremetal-server/docs/deployment.yml
+[5]: https://github.com/cloudfoundry-community/bosh-softlayer-baremetal-server/blob/master/docs/deployment.yml
