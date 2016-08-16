@@ -42,7 +42,7 @@ You can find an executable `bmp` in your `$GOPATH/bin` directory and move it to 
 
 To use bmp CLI, firstly you need to set the target and login, then you can use the CLI to communicate with server to create and provision a baremetal.  
 >**Example:**
->$ bmp target -t http://10.12.20.17:8080
+>$ bmp target -t `http://10.12.20.17:8080`
 >
 >$ bmp login -u admin -p admin
 >Login Successful!
