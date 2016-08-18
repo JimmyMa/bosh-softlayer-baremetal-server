@@ -1,0 +1,404 @@
+swagger: '2.0'
+info:
+  version: "0.1.0"
+  title: BOSH SoftLayer Baremetal Server APIs
+host: api.baremetal.softlayer.com
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+
+paths:
+  /login/{username}/{password}:
+    get:
+      description: |
+        Login user with username and password.
+      responses:
+        200:
+          description: Successful response
+
+  /info:
+    get:
+      description: |
+        Checks the status of the BMP server.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Info'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /stemcells:
+    get:
+      description: |
+        List BM server stemcells
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Stemcells'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /sl/packages:
+    get:
+      description: |
+        List BMP server stemcells.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Packages'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /sl/package/{packageID}/options:
+    get:
+      description: |
+        List SoftLayer package options
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PackageOptions'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /bms/{deploymentName}:
+    get:
+      description: |
+        List baremetal servers
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/BaremetalServers'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /tasks?latest={number}:
+    get:
+      description: |
+        List baremetal server tasks
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Tasks'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /tasks/{taskId}/txt/{level}
+    get:
+      description: |
+        List baremetal server task output
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TaskOutput'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /baremetal/{serverId}/{state}:
+    put:
+      description: |
+        Update baremetal server state
+      responses:
+        200:
+          description: Successful response
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /baremetals:
+    put:
+      description: |
+        Create baremetal servers
+      parameters:
+        - name: param
+          in: body
+          description: the spec and deployment for creating the baremetal server
+          required: true
+          type:
+            $ref: '#/definitions/BaremetalsParameter'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/BaremetalsResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+
+  Info:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        $ref: '#/definitions/InfoData'
+
+  InfoData:
+    type: object
+    properties:
+      name:
+        type: string
+        description: the name of the BMP server
+      version:
+        type: string
+        description: the version string of the BMP server
+
+  Stemcells:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        type: array
+        items:
+          type: string
+
+  Packages:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        type: object
+        properties:
+          packages:
+            type: array
+            items:
+              $ref: '#/definitions/Package'
+  Package:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      name:
+        type: string
+        description: the name of the package
+
+  PackageOptions:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        type: object
+        properties:
+          categories:
+            type: array
+            items:
+              $ref: '#/definitions/PackageOption'
+          datacenters:
+            type: array
+              items:
+                type: string
+                description: the name of the datacenter
+  PackageOption:
+    type: object
+    properties:
+      code:
+        type: string
+        description: the code for this package option, e.g., server
+      name:
+        type: string
+        description: the name for this package option
+      options:
+        type: array
+        items:
+          $ref: '#/definitions/Option'
+  Option:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      description:
+        type: string
+        description: the description for the option
+
+  BaremetalServers:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        $ref: '#/definitions/BaremetalServer'
+  BaremetalServer:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      hostname:
+        type: string
+        description: the hostname for the baremetal server
+      private_ip_address:
+        type: string
+        description: the private IP address for the baremetal server
+      public_ip_address:
+        type: string
+        description: the public IP address for the baremetal server
+      tags:
+        type: array
+        items:
+          type: string
+          description: a string tag value
+      hardware_status:
+        type: string
+        description: a string status of the hardware
+      memory:
+        type: integer
+        format: int32
+      cpu:
+        type: integer
+        format: int32
+      provision_date:
+        type: string
+        description: the date for the provisioning, e.g., 2016-07-05T19:38:08+08:00
+
+  Tasks:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Task'
+  Task:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      description:
+        type: string
+        description: the description string for this task
+      start_time:
+        type: string
+        description: the start time for task, e.g., 2016-07-05T19:38:08+08:00
+      status:
+        type: string
+        description: the status string for this task
+
+  TaskOutput:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        type: array
+        items:
+          type: string
+          description: one line of task output
+
+  BaremetalsParameter:
+    type: object
+    properties:
+      baremetal_specs:
+        bosh_ip:
+          type: string
+          description: the IP address for the BOSH director
+        datacenter:
+          type: string
+          description: the SoftLayer datacenter name
+        domain:
+          type: string
+          description: the domain address for the baremetal server
+        name_prefix:
+          type: string
+          description: a prefix string for the name of this baremetal server
+        server_spec:
+          $ref: '#/definitions/BaremetalServerSpec'
+        baremetal:
+          type: boolean
+          description: whether or not this is baremetal server
+        bm_stemcell:
+          type: string
+          description: the name of the baremetal server stemcell
+        bm_netboot_image:
+          type: string
+          description: the name of the netboot image
+        size:
+          type: integer
+          format: int32
+      deployment:
+        type: string
+        description: the deployment name
+  BaremetalServerSpec:
+    type: object
+    properties:
+      cores:
+        type: integer
+        format: int32
+      memory:
+        type: integer
+        format: int32
+      max_port_speed:
+        type: integer
+        format: int32
+      public_vlan_id:
+        type: integer
+        format: int32
+      private_vlan_id:
+        type: integer
+        format: int32
+      hourly:
+        type: boolean
+        description: whether this baremetal will be charged for by the hour or not
+
+  BaremetalsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        type: object
+        properties:
+          task_id:
+            type: integer
+            format: int32
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
