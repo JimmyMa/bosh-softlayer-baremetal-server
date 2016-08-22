@@ -1,7 +1,8 @@
 swagger: '2.0'
 info:
-  version: "0.1.0"
-  title: BOSH SoftLayer Baremetal Server APIs
+  version: "0.2.0"
+  title: SoftLayer Baremetal Provisioning
+  description: BOSH SoftLayer Baremetal provisioning server APIs
 host: api.baremetal.softlayer.com
 schemes:
   - https
