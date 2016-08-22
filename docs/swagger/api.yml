@@ -8,16 +8,25 @@ schemes:
 basePath: /v1
 produces:
   - application/json
-
 paths:
   /login/{username}/{password}:
     get:
       description: |
         Login user with username and password.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+          description: the username
+        - name: password
+          in: path
+          required: true
+          type: string
+          description: the password
       responses:
         200:
           description: Successful response
-
   /info:
     get:
       description: |
@@ -31,7 +40,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
   /stemcells:
     get:
       description: |
@@ -45,7 +53,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
   /sl/packages:
     get:
       description: |
@@ -59,11 +66,17 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
   /sl/package/{packageID}/options:
     get:
       description: |
         List SoftLayer package options
+      parameters:
+        - name: packageID
+          in: path
+          required: true
+          type: integer
+          format: int32
+          description: the ID of the package
       responses:
         200:
           description: Successful response
@@ -73,11 +86,16 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
   /bms/{deploymentName}:
     get:
       description: |
         List baremetal servers
+      parameters:
+        - name: deploymentName
+          in: path
+          required: true
+          type: string
+          description: the name of the deployment
       responses:
         200:
           description: Successful response
@@ -87,11 +105,17 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
-  /tasks?latest={number}:
+  /tasks?latest:
     get:
       description: |
         List baremetal server tasks
+      parameters:
+        - name: latest
+          in: query
+          type: integer
+          format: int32
+          required: true
+          description: the task number to use as latest
       responses:
         200:
           description: Successful response
@@ -101,11 +125,23 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
-  /tasks/{taskId}/txt/{level}
+  /tasks/{taskId}/txt/{level}:
     get:
       description: |
         List baremetal server task output
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          type: integer
+          format: int32
+          description: the ID for the task
+        - name: level
+          in: path
+          required: true
+          type: integer
+          format: int32
+          description: the log level to retrieve
       responses:
         200:
           description: Successful response
@@ -115,11 +151,22 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
   /baremetal/{serverId}/{state}:
     put:
       description: |
         Update baremetal server state
+      parameters:
+        - name: serverId
+          in: path
+          type: integer
+          format: int32
+          required: true
+          description: the ID for the server
+        - name: state
+          in: path
+          type: string
+          required: true
+          description: the new state for the server
       responses:
         200:
           description: Successful response
@@ -127,17 +174,15 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
   /baremetals:
     put:
-      description: |
-        Create baremetal servers
+      description: Create baremetal servers
       parameters:
-        - name: param
+        - name: baremetal_specs
           in: body
           description: the spec and deployment for creating the baremetal server
           required: true
-          type:
+          schema:
             $ref: '#/definitions/BaremetalsParameter'
       responses:
         200:
@@ -148,9 +193,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
 definitions:
-
   Info:
     type: object
     properties:
@@ -159,7 +202,6 @@ definitions:
         format: int32
       data:
         $ref: '#/definitions/InfoData'
-
   InfoData:
     type: object
     properties:
@@ -169,7 +211,6 @@ definitions:
       version:
         type: string
         description: the version string of the BMP server
-
   Stemcells:
     type: object
     properties:
@@ -180,7 +221,6 @@ definitions:
         type: array
         items:
           type: string
-
   Packages:
     type: object
     properties:
@@ -203,7 +243,6 @@ definitions:
       name:
         type: string
         description: the name of the package
-
   PackageOptions:
     type: object
     properties:
@@ -219,9 +258,9 @@ definitions:
               $ref: '#/definitions/PackageOption'
           datacenters:
             type: array
-              items:
-                type: string
-                description: the name of the datacenter
+            items:
+              type: string
+              description: the name of the datacenter
   PackageOption:
     type: object
     properties:
@@ -244,7 +283,6 @@ definitions:
       description:
         type: string
         description: the description for the option
-
   BaremetalServers:
     type: object
     properties:
@@ -285,7 +323,6 @@ definitions:
       provision_date:
         type: string
         description: the date for the provisioning, e.g., 2016-07-05T19:38:08+08:00
-
   Tasks:
     type: object
     properties:
@@ -311,7 +348,6 @@ definitions:
       status:
         type: string
         description: the status string for this task
-
   TaskOutput:
     type: object
     properties:
@@ -323,37 +359,35 @@ definitions:
         items:
           type: string
           description: one line of task output
-
   BaremetalsParameter:
     type: object
     properties:
-      baremetal_specs:
-        bosh_ip:
-          type: string
-          description: the IP address for the BOSH director
-        datacenter:
-          type: string
-          description: the SoftLayer datacenter name
-        domain:
-          type: string
-          description: the domain address for the baremetal server
-        name_prefix:
-          type: string
-          description: a prefix string for the name of this baremetal server
-        server_spec:
-          $ref: '#/definitions/BaremetalServerSpec'
-        baremetal:
-          type: boolean
-          description: whether or not this is baremetal server
-        bm_stemcell:
-          type: string
-          description: the name of the baremetal server stemcell
-        bm_netboot_image:
-          type: string
-          description: the name of the netboot image
-        size:
-          type: integer
-          format: int32
+      bosh_ip:
+        type: string
+        description: the IP address for the BOSH director
+      datacenter:
+        type: string
+        description: the SoftLayer datacenter name
+      domain:
+        type: string
+        description: the domain address for the baremetal server
+      name_prefix:
+        type: string
+        description: a prefix string for the name of this baremetal server
+      server_spec:
+        $ref: '#/definitions/BaremetalServerSpec'
+      baremetal:
+        type: boolean
+        description: whether or not this is baremetal server
+      bm_stemcell:
+        type: string
+        description: the name of the baremetal server stemcell
+      bm_netboot_image:
+        type: string
+        description: the name of the netboot image
+      size:
+        type: integer
+        format: int32
       deployment:
         type: string
         description: the deployment name
@@ -378,7 +412,6 @@ definitions:
       hourly:
         type: boolean
         description: whether this baremetal will be charged for by the hour or not
-
   BaremetalsResponse:
     type: object
     properties:
@@ -391,7 +424,6 @@ definitions:
           task_id:
             type: integer
             format: int32
-
   Error:
     type: object
     properties:
