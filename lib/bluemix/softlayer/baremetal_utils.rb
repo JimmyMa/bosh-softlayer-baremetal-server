@@ -68,10 +68,11 @@ module Bluemix::BM
         begin
           server = SoftLayer::BareMetalServer.server_with_id( id )
           self.update_state_new2loading( server["id"] )
-          self.to_server( server )
+          bm_server = self.to_server( server )
         rescue => e
-          nil
+          puts "get_baremetal_by_id failed: #{e}"
         end
+          return bm_server
       end
 
       def self.get_baremetals( deployment_name )
@@ -115,8 +116,8 @@ module Bluemix::BM
         private_net = server["networkComponents"].select{|net| net["name"] == "eth" && net["port"] == 0}[0]
         private_vlan = server["networkVlans"].select{|net| net["networkSpace"] == "PRIVATE"}[0]
         public_net = server["networkComponents"].select{|net| net["name"] == "eth" && net["port"] == 1}[0]
-        {
-          "id" => server["id"],
+        server_hash = Hash.new
+        server_hash = {"id" => server["id"],
           "hostname" => server["hostname"],
           "fullyQualifiedDomainName"=> server['fullyQualifiedDomainName'],
           "root_password" => server["operatingSystem"]["passwords"][0]["password"],
@@ -131,6 +132,7 @@ module Bluemix::BM
           "public_gateway" => public_net["primarySubnet"]["gateway"] ,
           "networkComponents" => server["networkComponents"]
         }
+        return server_hash
       end     
 
       def self.get_package_options( pkg_id )
